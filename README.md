@@ -57,3 +57,24 @@ To build and test the project run command ./gradlew clean build
 **Notes**:
 - n: Total number of elements currently stored within the set.
 - m: Number of elements in the incoming collection argument.
+
+# Performance Charts
+
+![add(E).png](PerformanceCharts/plot_add_E_.png)
+![addAll(Collection).png](PerformanceCharts/plot_addAll_CollectionanyextendsE_.png)
+![clear().png](PerformanceCharts/plot_clear__.png)
+![clone().png](PerformanceCharts/plot_clone__.png)
+![contains(Object).png](PerformanceCharts/plot_contains_Object_.png)
+![containsAll(Collection](PerformanceCharts/plot_containsAll_Collection_.png)
+![equals(Object).png](PerformanceCharts/plot_equals_Object_.png)
+![hashCode().png](PerformanceCharts/plot_hashCode__.png)
+![isEmpty().png](PerformanceCharts/plot_isEmpty__.png)
+![iterator().png](PerformanceCharts/plot_iterator__.png)
+![remove(Object).png](PerformanceCharts/plot_remove_Object_.png)
+![removeAll(Collection).png](PerformanceCharts/plot_removeAll_Collection_.png)
+![retainAll(Collection).png](PerformanceCharts/plot_retainAll_Collection_.png)
+![size(Collection).png](PerformanceCharts/plot_size__.png)
+![spliterator(Collection).png](PerformanceCharts/plot_spliterator__.png)
+![toArray(Collection).png](PerformanceCharts/plot_toArray__.png)
+![toArray(T[])(Collection).png](PerformanceCharts/plot_toArray_T[]_.png)
+![toString(Collection).png](PerformanceCharts/plot_toString__.png)
