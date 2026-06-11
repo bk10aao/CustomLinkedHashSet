@@ -420,8 +420,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
         StringBuilder stringBuilder = new StringBuilder("[");
         Iterator<E> iterator = iterator();
         while (iterator.hasNext()) {
-            E e = iterator.next();
-            stringBuilder.append(e);
+            stringBuilder.append(iterator.next());
             if (iterator.hasNext())
                 stringBuilder.append(", ");
         }
