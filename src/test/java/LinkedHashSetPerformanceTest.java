@@ -57,7 +57,7 @@ public class LinkedHashSetPerformanceTest {
             // 4. Utility Serialization & Structural Data Transformations
             long toArrayTime = benchmarkToArray(set);
             long toArrayTypedTime = benchmarkToArrayTyped(set, size);
-            long toStringTime = (size <= 25000) ? benchmarkToString(set) : -1; // Guard against massive string buffer overheads
+            long toStringTime = benchmarkToString(set);
 
             // 5. Comparison, Clones & Stream-Foundation Lifecycles (Previously Missing)
             long hashCodeTime = benchmarkHashCode(set);
