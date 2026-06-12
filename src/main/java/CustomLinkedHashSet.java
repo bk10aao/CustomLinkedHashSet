@@ -70,7 +70,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * @throws IllegalArgumentException if the initial capacity is less than zero
      */
     public CustomLinkedHashSet(final int initialCapacity) {
-        if (initialCapacity < 0)
+        if(initialCapacity < 0)
             throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
         set = new LinkedHashMap<>(initialCapacity);
     }
@@ -90,7 +90,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * than zero, or if the load factor is non-positive
      */
     public CustomLinkedHashSet(final int initialCapacity, final float loadFactor) {
-        if (initialCapacity < 0 || loadFactor <= 0 || Float.isNaN(loadFactor))
+        if(initialCapacity < 0 || loadFactor <= 0 || Float.isNaN(loadFactor))
             throw new IllegalArgumentException();
         set = new LinkedHashMap<>(initialCapacity, loadFactor);
     }
@@ -126,9 +126,9 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * @throws NullPointerException if the specified collection is null
      */
     public boolean addAll(final Collection<? extends E> c) {
-        if (c.isEmpty())
+        if(c.isEmpty())
             return false;
-        if (this.isEmpty())
+        if(this.isEmpty())
             this.set = new LinkedHashMap<>(Math.max((int) (c.size() / .75f) + 1, 16));
         boolean modified = false;
         for(E e : c)
@@ -171,7 +171,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
             CustomLinkedHashSet<E> clonedSet = (CustomLinkedHashSet<E>) super.clone();
             clonedSet.set = new LinkedHashMap<>(this.set);
             return clonedSet;
-        } catch (CloneNotSupportedException e) {
+        } catch(CloneNotSupportedException e) {
             throw new InternalError(e);
         }
     }
@@ -210,7 +210,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
     public boolean containsAll(Collection<?> c) {
         Objects.requireNonNull(c);
         for(Object o : c)
-            if (!contains(o))
+            if(!contains(o))
                 return false;
         return true;
     }
@@ -247,7 +247,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
             return false;
         try {
             return containsAll(other);
-        } catch (ClassCastException | NullPointerException unused) {
+        } catch(ClassCastException | NullPointerException unused) {
             return false;
         }
     }
@@ -275,8 +275,8 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
     @Override
     public int hashCode() {
         int h = 0;
-        for (E e : set.keySet())
-            if (e != null)
+        for(E e : set.keySet())
+            if(e != null)
                 h += e.hashCode();
         return h;
     }
@@ -419,9 +419,9 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
             return "[]";
         StringBuilder stringBuilder = new StringBuilder("[");
         Iterator<E> iterator = iterator();
-        while (iterator.hasNext()) {
+        while(iterator.hasNext()) {
             stringBuilder.append(iterator.next());
-            if (iterator.hasNext())
+            if(iterator.hasNext())
                 stringBuilder.append(", ");
         }
         return stringBuilder + "]";
