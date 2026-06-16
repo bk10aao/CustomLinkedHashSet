@@ -106,6 +106,7 @@ To build and test the project run command ./gradlew clean build
 
 #### Note: The following performance charts are designed to be viewed in dark mode.
 ![geometric_performance.png](PerformanceCharts/geometric_performance.png)
+![heatmap](PerformanceCharts/heatmap.png)
 ![add(E).png](PerformanceCharts/plot_add_E_.png)
 ![addAll(Collection).png](PerformanceCharts/plot_addAll_CollectionanyextendsE_.png)
 ![clear().png](PerformanceCharts/plot_clear__.png)
