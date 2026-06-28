@@ -27,7 +27,7 @@ import java.util.Spliterator;
  */
 public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
 
-    private volatile LinkedHashMap<E, Object> set;
+    private LinkedHashMap<E, Object> set;
     private static final Object PRESENT = new Object();
 
     /**
@@ -126,10 +126,15 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * @throws NullPointerException if the specified collection is null
      */
     public boolean addAll(final Collection<? extends E> c) {
+        Objects.requireNonNull(c);
         if(c.isEmpty())
             return false;
-        if(this.isEmpty())
-            this.set = new LinkedHashMap<>(Math.max((int) (c.size() / .75f) + 1, 16));
+        int expectedSize = size() + c.size();
+        if(expectedSize > set.size()) {
+            LinkedHashMap<E, Object> resized = new LinkedHashMap<>(Math.max((int) (expectedSize / .75f) + 1, 16), 0.75f);
+            resized.putAll(set);
+            set = resized;
+        }
         boolean modified = false;
         for(E e : c)
             if(add(e))
@@ -257,10 +262,9 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * to be the sum of the hash codes of the elements in the set, where the hash
      * code of a {@code null} element is defined to be zero.
      * <p>This implementation iterates through the keys of the backing {@code LinkedHashMap}
-     * and sequentially accumulates their individual hash values. It includes an explicit
-     * {@code null} safety check to prevent a {@link NullPointerException} if the set contains
-     * a {@code null} element, skipping its contribution to the sum (effectively treating it
-     * as zero).
+     * and sequentially accumulates their individual hash values via {@link Objects#hashCode(Object)},
+     * which safely returns zero for any {@code null} elements without requiring an explicit
+     * null guard.
      * <p>This calculation ensures compliance with the general contract for the
      * {@link Object#hashCode()} method, guaranteeing that if {@code set1.equals(set2)}
      * evaluates to {@code true}, then {@code set1.hashCode() == set2.hashCode()} will
@@ -276,8 +280,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
     public int hashCode() {
         int h = 0;
         for(E e : set.keySet())
-            if(e != null)
-                h += e.hashCode();
+            h += Objects.hashCode(e);
         return h;
     }
 
@@ -333,7 +336,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * @return {@code true} if the set contained the specified element
      */
     public boolean remove(Object o) {
-        return set.remove(o) != null;
+        return set.remove(o, PRESENT);
     }
 
     /**
@@ -401,13 +404,9 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * consists of a list of the set's elements in the order they are returned
      * by its iterator, enclosed in square brackets ({@code "[]"}). Adjacent elements
      * are separated by the characters {@code ", "} (a comma and a space).
-     * <p>This implementation features a short-circuit boundary check that instantly
-     * returns {@code "[]"} if the set is empty. Otherwise, it utilizes a
-     * {@link StringBuilder} to sequentially append each element's string equivalent
-     * (via {@link String#valueOf(Object)}).
-     * <p>Because this method relies directly on the set's insertion-ordered iterator,
-     * the resulting string accurately mirrors the structural historical sequence of
-     * the elements.
+     * <p>This implementation delegates directly to the key-set string representation
+     * of the backing {@code LinkedHashMap}, which accurately mirrors the structural
+     * historical sequence of the elements in insertion order.
      *
      * @return a string representation of this set
      *
@@ -415,16 +414,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      */
     @Override
     public String toString() {
-        if(isEmpty())
-            return "[]";
-        StringBuilder stringBuilder = new StringBuilder("[");
-        Iterator<E> iterator = iterator();
-        while(iterator.hasNext()) {
-            stringBuilder.append(iterator.next());
-            if(iterator.hasNext())
-                stringBuilder.append(", ");
-        }
-        return stringBuilder + "]";
+        return set.keySet().toString();
     }
 
     /**
