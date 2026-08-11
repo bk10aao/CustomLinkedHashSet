@@ -10,14 +10,11 @@ import java.util.Spliterator;
 
 public class LinkedHashSetPerformanceTest {
     public static void main(String[] args) {
-        // Logarithmic scale sizes to comprehensively test performance boundaries
         int[] sizes = {1, 10, 50, 100, 250, 500, 750, 1000, 2500, 5000, 7500, 10000,
                 25000, 50000, 100000};
 
         ArrayList<long[]> results = new ArrayList<>();
         Random random = new Random();
-
-        // JVM Warm-up phase to trigger Just-In-Time (JIT) compilation optimizations
         System.out.println("Warming up JVM...");
         for (int i = 0; i < 10000; i++) {
             LinkedHashSet<Integer> warmUpSet = new LinkedHashSet<>();
@@ -34,18 +31,13 @@ public class LinkedHashSetPerformanceTest {
             LinkedHashSet<Integer> set = new LinkedHashSet<>();
             set.addAll(collection);
 
-            // 1. Single-Element Writing & Bulk Collection Operations
             long addTime = benchmarkAdd(new LinkedHashSet<>(), size, random);
             long addAllTime = benchmarkAddAll(new LinkedHashSet<>(), collection);
             long clearTime = benchmarkClear(new LinkedHashSet<>(collection));
-
-            // 2. Lookup & Inspection Operations
             long containsTime = benchmarkContains(set, collection, random);
             long containsAllTime = benchmarkContainsAll(set, collection);
             long isEmptyTime = benchmarkIsEmpty(set);
             long sizeTime = benchmarkSize(set);
-
-            // 3. Destructive Deletions & Retentions
             long removeTime = benchmarkRemove(set, collection, random);
 
             LinkedHashSet<Integer> removeAllSet = new LinkedHashSet<>(collection);
@@ -53,13 +45,9 @@ public class LinkedHashSetPerformanceTest {
 
             LinkedHashSet<Integer> retainAllSet = new LinkedHashSet<>(collection);
             long retainAllTime = benchmarkRetainAll(retainAllSet, collection);
-
-            // 4. Utility Serialization & Structural Data Transformations
             long toArrayTime = benchmarkToArray(set);
             long toArrayTypedTime = benchmarkToArrayTyped(set, size);
             long toStringTime = benchmarkToString(set);
-
-            // 5. Comparison, Clones & Stream-Foundation Lifecycles (Previously Missing)
             long hashCodeTime = benchmarkHashCode(set);
             long cloneTime = benchmarkClone(set);
             long iteratorConsumeTime = benchmarkIteratorConsumption(set);
@@ -68,7 +56,6 @@ public class LinkedHashSetPerformanceTest {
             LinkedHashSet<Integer> equalMatchSet = new LinkedHashSet<>(collection);
             long equalsTime = benchmarkEquals(set, equalMatchSet);
 
-            // Store aligned row vectors
             results.add(new long[]{
                     size, addTime, addAllTime, clearTime, containsTime, containsAllTime,
                     isEmptyTime, removeTime, removeAllTime, retainAllTime, sizeTime,
@@ -77,7 +64,6 @@ public class LinkedHashSetPerformanceTest {
             });
         }
 
-        // Write output to comma-separated file utilizing explicit formal API parameter naming conventions
         String csvFileName = "LinkedHashSet_performance_data.csv";
         try (FileWriter writer = new FileWriter(csvFileName)) {
             writer.write("Size," +
@@ -115,8 +101,6 @@ public class LinkedHashSetPerformanceTest {
             System.err.println("Fatal Error executing file serialization layout: " + e.getMessage());
         }
     }
-
-    // --- Benchmark Subroutines ---
 
     private static long benchmarkAdd(LinkedHashSet<Integer> set, int size, Random random) {
         long start = System.nanoTime();
@@ -236,8 +220,6 @@ public class LinkedHashSetPerformanceTest {
         spliterator.forEachRemaining(element -> {});
         return System.nanoTime() - start;
     }
-
-    // --- Auxiliary Utilities ---
 
     private static List<Integer> generateCollection(int size, Random random) {
         List<Integer> collection = new ArrayList<>(size);

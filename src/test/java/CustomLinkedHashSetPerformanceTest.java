@@ -9,14 +9,12 @@ import java.util.Spliterator;
 
 public class CustomLinkedHashSetPerformanceTest {
     public static void main(String[] args) {
-        // Logarithmic scale sizes to comprehensively test performance boundaries
         int[] sizes = {1, 10, 50, 100, 250, 500, 750, 1000, 2500, 5000, 7500, 10000,
                 25000, 50000, 100000};
 
         ArrayList<long[]> results = new ArrayList<>();
         Random random = new Random();
 
-        // JVM Warm-up phase to trigger Just-In-Time (JIT) compilation optimizations
         System.out.println("Warming up JVM...");
         for (int i = 0; i < 10000; i++) {
             CustomLinkedHashSet<Integer> warmUpSet = new CustomLinkedHashSet<>();
@@ -33,41 +31,27 @@ public class CustomLinkedHashSetPerformanceTest {
             CustomLinkedHashSet<Integer> set = new CustomLinkedHashSet<>();
             set.addAll(collection);
 
-            // 1. Single-Element Writing & Bulk Collection Operations
             long addTime = benchmarkAdd(new CustomLinkedHashSet<>(), size, random);
             long addAllTime = benchmarkAddAll(new CustomLinkedHashSet<>(), collection);
             long clearTime = benchmarkClear(new CustomLinkedHashSet<>(collection));
-
-            // 2. Lookup & Inspection Operations
             long containsTime = benchmarkContains(set, collection, random);
             long containsAllTime = benchmarkContainsAll(set, collection);
             long isEmptyTime = benchmarkIsEmpty(set);
             long sizeTime = benchmarkSize(set);
-
-            // 3. Destructive Deletions & Retentions
             long removeTime = benchmarkRemove(set, collection, random);
-
             CustomLinkedHashSet<Integer> removeAllSet = new CustomLinkedHashSet<>(collection);
             long removeAllTime = benchmarkRemoveAll(removeAllSet, collection);
-
             CustomLinkedHashSet<Integer> retainAllSet = new CustomLinkedHashSet<>(collection);
             long retainAllTime = benchmarkRetainAll(retainAllSet, collection);
-
-            // 4. Utility Serialization & Structural Data Transformations
             long toArrayTime = benchmarkToArray(set);
             long toArrayTypedTime = benchmarkToArrayTyped(set, size);
             long toStringTime = benchmarkToString(set);
-
-            // 5. Comparison, Clones & Stream-Foundation Lifecycles (Previously Missing)
             long hashCodeTime = benchmarkHashCode(set);
             long cloneTime = benchmarkClone(set);
             long iteratorConsumeTime = benchmarkIteratorConsumption(set);
             long spliteratorConsumeTime = benchmarkSpliteratorConsumption(set);
-
             CustomLinkedHashSet<Integer> equalMatchSet = new CustomLinkedHashSet<>(collection);
             long equalsTime = benchmarkEquals(set, equalMatchSet);
-
-            // Store aligned row vectors
             results.add(new long[]{
                     size, addTime, addAllTime, clearTime, containsTime, containsAllTime,
                     isEmptyTime, removeTime, removeAllTime, retainAllTime, sizeTime,
@@ -76,7 +60,6 @@ public class CustomLinkedHashSetPerformanceTest {
             });
         }
 
-        // Write output to comma-separated file utilizing explicit formal API parameter naming conventions
         String csvFileName = "CustomLinkedHashSet_performance_data.csv";
         try (FileWriter writer = new FileWriter(csvFileName)) {
             writer.write("Size," +
@@ -114,8 +97,6 @@ public class CustomLinkedHashSetPerformanceTest {
             System.err.println("Fatal Error executing file serialization layout: " + e.getMessage());
         }
     }
-
-    // --- Benchmark Subroutines ---
 
     private static long benchmarkAdd(CustomLinkedHashSet<Integer> set, int size, Random random) {
         long start = System.nanoTime();
@@ -235,8 +216,6 @@ public class CustomLinkedHashSetPerformanceTest {
         spliterator.forEachRemaining(element -> {});
         return System.nanoTime() - start;
     }
-
-    // --- Auxiliary Utilities ---
 
     private static List<Integer> generateCollection(int size, Random random) {
         List<Integer> collection = new ArrayList<>(size);
