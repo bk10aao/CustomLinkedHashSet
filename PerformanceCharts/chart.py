@@ -203,7 +203,7 @@ def create_chart(col_name, chart_title, clhs_data, lhs_data,
             markeredgecolor=COLORS['purple'],
             markeredgewidth=1.5,
             markersize=8,
-            label='CustomLinkedHashSet',
+            label='Custom',
             linestyle='none'
         ),
         Line2D(
@@ -214,7 +214,7 @@ def create_chart(col_name, chart_title, clhs_data, lhs_data,
             markeredgecolor=COLORS['blue'],
             markeredgewidth=1.5,
             markersize=8,
-            label='JDK LinkedHashSet',
+            label='JDK',
             linestyle='none'
         ),
     ]

@@ -106,7 +106,7 @@ sns.heatmap(clipped_data,
             yticklabels=display_methods,
             ax=ax,
             cbar_kws={
-                'label': '← JDK Faster (LinkedHashSet)  |  Relative Speedup Scale (Clipped at 16x)  |  Custom Faster (CustomLinkedHashSet) →'},
+                'label': '← JDK Faster (LinkedHashSet)  |  Relative Speedup Scale (Clipped at 16x)  |  Custom Faster →'},
             linewidths=0.6,
             linecolor='#444444',
             annot_kws={'size': 9, 'weight': 'bold'})
