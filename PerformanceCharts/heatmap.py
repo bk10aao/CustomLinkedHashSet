@@ -1,13 +1,46 @@
-import pandas as pd
-import numpy as np
+#!/usr/bin/env python3
+"""
+Generate a performance comparison matrix heatmap between CustomLinkedHashSet and JDK LinkedHashSet.
+Compatible with wide-format JMH CSV performance reports.
+"""
+
+import matplotlib
+
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
+import io
 
-clhs_df = pd.read_csv('CustomLinkedHashSet_performance_data.csv')
-lhs_df = pd.read_csv('LinkedHashSet_performance_data.csv')
 
-sizes = clhs_df['Size'].tolist()
-methods = [c for c in clhs_df.columns if c != 'Size']
+# ──────────────────────────────────────────────────────────────────────────────
+# CSV Loading (Robust handling for mixed/semicolon/comma delimiters)
+# ──────────────────────────────────────────────────────────────────────────────
+
+def load_wide_jmh_csv(filepath):
+    """Load wide-format JMH CSV robustly regardless of delimiter."""
+    with open(filepath, 'r') as f:
+        lines = [line.strip() for line in f if line.strip()]
+
+    sample_line = lines[0]
+    sep = ';' if ';' in sample_line else ','
+
+    df = pd.read_csv(io.StringIO('\n'.join(lines)), sep=sep)
+    df.columns = [c.strip() for c in df.columns]
+    return df
+
+
+# Load datasets
+clhs_df = load_wide_jmh_csv('CustomLinkedHashSet_jmh_performance.csv')
+lhs_df = load_wide_jmh_csv('LinkedHashSet_jmh_performance.csv')
+
+# Ensure 'Size' is numeric and clean up method columns
+clhs_df['Size'] = pd.to_numeric(clhs_df['Size'])
+lhs_df['Size'] = pd.to_numeric(lhs_df['Size'])
+
+sizes = sorted(clhs_df['Size'].tolist())
+methods = [c for c in clhs_df.columns if c != 'Size' and c in lhs_df.columns and 'putIfAbsent' not in c]
 
 heatmap_data = np.zeros((len(methods), len(sizes)))
 text_labels = []
@@ -15,13 +48,16 @@ text_labels = []
 for i, m in enumerate(methods):
     row_labels = []
     for j, size in enumerate(sizes):
-        clhs_val = clhs_df.loc[clhs_df['Size'] == size, m].values[0]
-        lhs_val = lhs_df.loc[lhs_df['Size'] == size, m].values[0]
+        c_val_str = clhs_df.loc[clhs_df['Size'] == size, m].values
+        j_val_str = lhs_df.loc[lhs_df['Size'] == size, m].values
 
-        if clhs_val == 0: clhs_val = 1
-        if lhs_val == 0: lhs_val = 1
+        clhs_val = float(c_val_str[0]) if len(c_val_str) > 0 and pd.notna(c_val_str[0]) else 1.0
+        lhs_val = float(j_val_str[0]) if len(j_val_str) > 0 and pd.notna(j_val_str[0]) else 1.0
 
-        # log2 ratio: positive means Custom is faster (LinkedHashSet took more time)
+        if clhs_val == 0: clhs_val = 1.0
+        if lhs_val == 0: lhs_val = 1.0
+
+        # log2 ratio: positive means Custom is faster (JDK took more time)
         ratio = np.log2(lhs_val / clhs_val)
         heatmap_data[i, j] = ratio
 
@@ -43,8 +79,19 @@ heatmap_data = heatmap_data[sorted_idx]
 text_labels = text_labels[sorted_idx]
 sorted_methods = [methods[idx] for idx in sorted_idx]
 
+# Clean method names for display
+display_methods = [
+    m.replace('(K,V)', '')
+    .replace('(K)', '')
+    .replace('(V)', '')
+    .replace('(Object o)', '')
+    .replace('(Object)', '')
+    .replace('()', '')
+    for m in sorted_methods
+]
+
 # Plotting the heatmap
-fig, ax = plt.subplots(figsize=(16, 14), facecolor='none')
+fig, ax = plt.subplots(figsize=(16, 12), facecolor='none')
 ax.set_facecolor('none')
 
 clipped_data = np.clip(heatmap_data, -4.0, 4.0)
@@ -55,8 +102,8 @@ sns.heatmap(clipped_data,
             fmt="",
             cmap=cmap,
             center=0,
-            xticklabels=sizes,
-            yticklabels=sorted_methods,
+            xticklabels=[f'{s:,}' for s in sizes],
+            yticklabels=display_methods,
             ax=ax,
             cbar_kws={
                 'label': '← JDK Faster (LinkedHashSet)  |  Relative Speedup Scale (Clipped at 16x)  |  Custom Faster (CustomLinkedHashSet) →'},
@@ -66,25 +113,25 @@ sns.heatmap(clipped_data,
 
 ax.set_title(
     'Java LinkedHashSet Performance Comparison Matrix Heatmap\n(Positive/Blue = CustomLinkedHashSet Faster, Negative/Red = LinkedHashSet Faster)',
-    color='#ffffff', fontsize=16, fontweight='bold', pad=20)
-ax.set_ylabel('Set Interface Methods', color='#aaaaaa', fontsize=13, labelpad=10)
-ax.set_xlabel('Collection Size (Elements)', color='#aaaaaa', fontsize=13, labelpad=10)
+    color='#ffffff', fontsize=15, fontweight='bold', pad=20)
+ax.set_ylabel('Set Interface Methods', color='#ffffff', fontsize=12, labelpad=10)
+ax.set_xlabel('Collection Size (Elements)', color='#ffffff', fontsize=12, labelpad=10)
 
-ax.tick_params(colors='#ffffff', labelsize=11)
-plt.xticks(rotation=45)
+ax.tick_params(colors='#ffffff', labelsize=10)
+plt.xticks(rotation=45, ha='right')
 plt.yticks(rotation=0)
 
 cbar = ax.collections[0].colorbar
 cbar.ax.tick_params(colors='#ffffff', labelsize=10)
 cbar.ax.yaxis.label.set_color('#ffffff')
-cbar.ax.yaxis.label.set_fontsize(12)
+cbar.ax.yaxis.label.set_fontsize(11)
 
 plt.tight_layout()
 plt.savefig('heatmap.png', dpi=300, transparent=True)
 plt.close()
 
-print("Heatmap saved successfully as custom_linked_hash_set_performance_heatmap.png")
+print("Heatmap saved successfully as heatmap.png")
 print("Top 3 worst performing methods for Custom on average:")
-print(sorted_methods[:3])
+print(display_methods[:3])
 print("Top 3 best performing methods for Custom on average:")
-print(sorted_methods[-3:])
+print(display_methods[-3:])

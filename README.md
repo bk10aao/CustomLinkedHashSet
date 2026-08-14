@@ -6,7 +6,7 @@ All methods implemented are identical to those found in the Java Set interface.
 
 # Build and Test
 
-To build and test the project run command ./gradlew clean build
+To build and test the project run command `./gradlew clean build`
 
 # Time Complexity
 
@@ -105,23 +105,27 @@ To build and test the project run command ./gradlew clean build
 # Performance Charts
 
 #### Note: The following performance charts are designed to be viewed in dark mode.
-![geometric_performance.png](PerformanceCharts/geometric_performance.png)
+![geometric_performance.png](PerformanceCharts/geometric.png)
 ![heatmap](PerformanceCharts/heatmap.png)
-![add(E).png](PerformanceCharts/plot_add_E_.png)
-![addAll(Collection).png](PerformanceCharts/plot_addAll_CollectionanyextendsE_.png)
-![clear().png](PerformanceCharts/plot_clear__.png)
-![clone().png](PerformanceCharts/plot_clone__.png)
-![contains(Object).png](PerformanceCharts/plot_contains_Object_.png)
-![containsAll(Collection](PerformanceCharts/plot_containsAll_Collectionany_.png)
-![equals(Object).png](PerformanceCharts/plot_equals_Object_.png)
-![hashCode().png](PerformanceCharts/plot_hashCode__.png)
-![isEmpty().png](PerformanceCharts/plot_isEmpty__.png)
-![iterator().png](PerformanceCharts/plot_iterator__.png)
-![remove(Object).png](PerformanceCharts/plot_remove_Object_.png)
-![removeAll(Collection).png](PerformanceCharts/plot_removeAll_Collectionany_.png)
-![retainAll(Collection).png](PerformanceCharts/plot_retainAll_Collectionany_.png)
-![size(Collection).png](PerformanceCharts/plot_size__.png)
-![spliterator(Collection).png](PerformanceCharts/plot_spliterator__.png)
-![toArray(Collection).png](PerformanceCharts/plot_toArray__.png)
-![toArray(T[])(Collection).png](PerformanceCharts/plot_toArray_T[]_.png)
-![toString(Collection).png](PerformanceCharts/plot_toString__.png)
+![constructor.png](PerformanceCharts/constructor.png)
+![constructor_collection.png](PerformanceCharts/constructor_collection.png)
+![constructor_int.png](PerformanceCharts/constructor_int.png)
+![constructor_int_float.png](PerformanceCharts/constructor_int_float.png)
+![add.png](PerformanceCharts/add.png)
+![addAll.png](PerformanceCharts/addAll.png)
+![clear.png](PerformanceCharts/clear.png)
+![clone.png](PerformanceCharts/clone.png)
+![contains.png](PerformanceCharts/contains.png)
+![containsAll.png](PerformanceCharts/containsAll.png)
+![equals.png](PerformanceCharts/equals.png)
+![hashCode.png](PerformanceCharts/hashCode.png)
+![isEmpty.png](PerformanceCharts/isEmpty.png)
+![iterator.png](PerformanceCharts/iterator.png)
+![remove.png](PerformanceCharts/remove.png)
+![removeAll.png](PerformanceCharts/removeAll.png)
+![retainAll.png](PerformanceCharts/retainAll.png)
+![size.png](PerformanceCharts/size.png)
+![spliterator.png](PerformanceCharts/spliterator.png)
+![toArray.png](PerformanceCharts/toArray.png)
+![toArray_T.png](PerformanceCharts/toArray_T.png)
+![toString.png](PerformanceCharts/toString.png)

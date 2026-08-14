@@ -1,3 +1,5 @@
+package customset;
+
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -5,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * A specialized hash table and doubly-linked list-based implementation of the {@link Set} interface.
@@ -51,7 +55,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * @throws NullPointerException if the specified collection is null
      */
     public CustomLinkedHashSet(final Collection<E> c) {
-        Objects.requireNonNull(c);
+        requireNonNull(c);
         set = new LinkedHashMap<>(Math.max((int) (c.size() / .75f) + 1, 16));
         for(E e: c)
             set.put(e, PRESENT);
@@ -126,20 +130,21 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * @throws NullPointerException if the specified collection is null
      */
     public boolean addAll(final Collection<? extends E> c) {
-        Objects.requireNonNull(c);
-        if(c.isEmpty())
+        requireNonNull(c);
+        if (c.isEmpty())
             return false;
-        int expectedSize = size() + c.size();
-        if(expectedSize > set.size()) {
+        int initialSize = size();
+        int expectedSize = initialSize + c.size();
+        if (expectedSize > set.size()) {
             LinkedHashMap<E, Object> resized = new LinkedHashMap<>(Math.max((int) (expectedSize / .75f) + 1, 16), 0.75f);
             resized.putAll(set);
+            for (E e : c)
+                resized.put(e, PRESENT);
             set = resized;
-        }
-        boolean modified = false;
-        for(E e : c)
-            if(add(e))
-                modified = true;
-        return modified;
+        } else
+            for (E e : c)
+                set.put(e, PRESENT);
+        return size() > initialSize;
     }
 
     /**
@@ -213,7 +218,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * @see #contains(Object)
      */
     public boolean containsAll(Collection<?> c) {
-        Objects.requireNonNull(c);
+        requireNonNull(c);
         for(Object o : c)
             if(!contains(o))
                 return false;
@@ -357,7 +362,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * @see Collection#removeAll(Collection)
      */
     public boolean removeAll(Collection<?> c) {
-        Objects.requireNonNull(c);
+        requireNonNull(c);
         return set.keySet().removeAll(c);
     }
 
@@ -379,7 +384,7 @@ public class CustomLinkedHashSet<E> implements Set<E>, Cloneable {
      * @see Collection#retainAll(Collection)
      */
     public boolean retainAll(Collection<?> c) {
-        Objects.requireNonNull(c);
+        requireNonNull(c);
         return set.keySet().retainAll(c);
     }
 
