@@ -1,6 +1,6 @@
 # Custom Linked Hashset
 
-Implementation of a LinkedHashSet.
+Implementation of a LinkedSet backed by a LinkedHashMap.
 
 All methods implemented are identical to those found in the Java Set interface.
 
