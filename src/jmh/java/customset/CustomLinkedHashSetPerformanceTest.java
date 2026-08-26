@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 2, time = 500, timeUnit = TimeUnit.MILLISECONDS)
 @Measurement(iterations = 3, time = 500, timeUnit = TimeUnit.MILLISECONDS)
-@Fork(3)
+@Fork(1)
 public class CustomLinkedHashSetPerformanceTest {
 
     @Param({"10000", "20000", "30000", "40000", "50000", "60000", "70000", "80000", "90000", "100000"})
@@ -198,7 +198,7 @@ public class CustomLinkedHashSetPerformanceTest {
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(CustomLinkedHashSetPerformanceTest.class.getSimpleName())
-                .forks(3)
+                .forks(1)
                 .result("CustomLinkedHashSet_performance_results.csv")
                 .resultFormat(ResultFormatType.CSV)
                 .build();
